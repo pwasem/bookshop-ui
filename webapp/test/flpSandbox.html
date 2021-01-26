@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge"/>
+    <meta charset="UTF-8"/>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"/>
+    <!-- i18n title -->
+    <title>{{appTitle}}</title>
+    <!-- load ushell config -->
+    <script
+        id="sap-ushell-config"
+        src="./sap-ushell-config.js"></script>
+    <!-- bootstrap ushell sandbox -->
+    <script
+        id="sap-ushell-bootstrap"
+        src="/test-resources/sap/ushell/bootstrap/sandbox.js"></script>
+    <!-- bootstrap the UI5 core library -->
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-libs="sap.ui.core, sap.m, sap.suite.ui.generic.template, sap.ushell, sap.ui.fl"
+        data-sap-ui-resourceroots='{
+          "bookshop.ui": "../"
+        }'
+        data-sap-ui-onInit="module:bookshop/ui/test/flpSandbox"
+        data-sap-ui-theme="sap_fiori_3_dark"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-language="en-US"
+        data-sap-ui-frameOptions="allow"></script>
+  </head>
+  <body
+      id="content"
+      class="sapUiBody">
+    <!-- content will rendered here -->
+  </body>
+</html>

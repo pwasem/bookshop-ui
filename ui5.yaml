@@ -1,0 +1,106 @@
+specVersion: "2.2"
+metadata:
+  name: bookshop.ui
+type: application
+framework:
+  name: SAPUI5
+  version: "1.84.4"
+  libraries:
+    - name: sap.m
+    - name: sap.ui.core
+    - name: sap.suite.ui.generic.template
+    - name: themelib_sap_fiori_3
+      optional: true
+    - name: sap.ushell
+      development: true
+    - name: sap.ui.fl
+      development: true
+server:
+  customMiddleware:
+  # livereload
+  - name: fiori-tools-appreload
+    afterMiddleware: compression
+    configuration:
+      ext: html,js,json,xml,properties,change
+  # service proxy
+  - name: ui5-middleware-http-proxy
+    mountPath: /v2/admin
+    afterMiddleware: compression
+    configuration:
+      baseUrl: http://localhost:4004
+      path: /v2/admin
+  # layered respository / flexibility
+  - name: ui5-middleware-lrep-flex
+    afterMiddleware: compression
+    configuration:
+      # handle e.g. GET /sap/bc/lrep/flex/data/bookshop.ui.Component?appVersion=1.0.0&sap-language=en
+      component:
+        # data to be merged to each .change file
+        changeData:
+          support:
+            user: "SAP"
+          validAppVersions:
+            creation: "0.1.0"
+            from: "0.1.0"
+            to: "0.1.0"
+        # data to be merged and sent for each response
+        data:
+          settings:
+            isKeyUser: true
+            isAtoAvailable: false
+            isProductiveSystem: false
+   # babel
+  - name: ui5-middleware-babel
+    afterMiddleware: compression
+    configuration:
+      wrap: true
+      excludes:
+        - "/test/**"
+        - "/localService/**"
+        - "/resources/thirdparty/core-js-bundle/**"
+        - "/resources/thirdparty/regenerator-runtime/**"
+builder:
+  resources:
+    excludes:
+      - "**/test/**"
+      - "**/localService/**"
+  customTasks:
+    # babel
+    - name: ui5-task-babel
+      afterTask: replaceVersion
+    # copy-shim-resources
+    - name: ui5-task-copy-shim-resources
+      afterTask: ui5-task-babel
+      configuration:
+        paths:
+          - "/resources/thirdparty/core-js-bundle/minified.js"
+          - "/resources/thirdparty/regenerator-runtime/runtime.js"
+---
+# Shims for thirdparty modules
+specVersion: "2.2"
+kind: extension
+type: project-shim
+metadata:
+  name: thirdparty-shims
+shims:
+  configurations:
+    # polyfill for ECMAScript features
+    core-js-bundle:
+      specVersion: "2.2"
+      type: module
+      metadata:
+        name: core-js-bundle
+      resources:
+        configuration:
+          paths:
+            /resources/thirdparty/core-js-bundle/: ""
+    # transpile generator functions (~ async await)
+    regenerator-runtime:
+      specVersion: "2.2"
+      type: module # Use module type
+      metadata:
+        name: regenerator-runtime
+      resources:
+        configuration:
+          paths:
+            /resources/thirdparty/regenerator-runtime/: ""

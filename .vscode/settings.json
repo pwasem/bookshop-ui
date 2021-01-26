@@ -1,0 +1,8 @@
+{
+  "xml.format.splitAttributes": true,
+  "xml.format.spaceBeforeEmptyCloseTag": false,
+  "files.associations": {
+    "*.html": "xml",
+    "*.change": "json"
+  }
+}
